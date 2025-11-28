@@ -1,3 +1,4 @@
+import Footer from '../UI/Footer';
 import PopularLocations from './PopularLocations';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -104,6 +105,9 @@ const HomePage = () => {
         </div>
       </div> */}
       <PopularLocations/>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Search Modal */}
       <SearchModal 

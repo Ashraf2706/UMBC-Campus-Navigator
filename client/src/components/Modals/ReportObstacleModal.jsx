@@ -10,8 +10,8 @@ const ReportObstacleModal = ({ isOpen, onClose }) => {
     description: '',
     type: 'Construction',
     severity: 'Medium',
-    latitude: '',
-    longitude: '',
+    // latitude: '',
+    // longitude: '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -25,10 +25,10 @@ const ReportObstacleModal = ({ isOpen, onClose }) => {
         obstacleID: `OBS_${Date.now()}`,
         type: formData.type,
         description: `${formData.title} - ${formData.description}`,
-        coordinates: {
-          lat: parseFloat(formData.latitude),
-          lng: parseFloat(formData.longitude),
-        },
+        // coordinates: {
+        //   lat: parseFloat(formData.latitude),
+        //   lng: parseFloat(formData.longitude),
+        // },
         severity: formData.severity,
         startDate: new Date(),
         isActive: true,
@@ -44,8 +44,8 @@ const ReportObstacleModal = ({ isOpen, onClose }) => {
           description: '',
           type: 'Construction',
           severity: 'Medium',
-          latitude: '',
-          longitude: '',
+          // latitude: '',
+          // longitude: '',
         });
       }, 2000);
     } catch (error) {
@@ -148,7 +148,7 @@ const ReportObstacleModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Coordinates */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Latitude
@@ -177,7 +177,7 @@ const ReportObstacleModal = ({ isOpen, onClose }) => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-umbc-gold focus:border-transparent"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Buttons */}
         <div className="flex gap-3 pt-4">

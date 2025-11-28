@@ -1,10 +1,10 @@
+// src/components/Map/MapPage.jsx - Enhanced Version
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AlertCircle, Navigation, Bike } from 'lucide-react';
+import { AlertCircle, Navigation, Bike, MapPin, Crosshair } from 'lucide-react';
 import MapContainer from './MapContainer';
 import BuildingDetailsPanel from '../Building/BuildingDetailsPanel';
 import RouteInfoPanel from './RouteInfoPanel';
-import Button from '../UI/Button';
 import { getAllLocations } from '../../services/locationService';
 import { calculateRoute } from '../../services/routeService';
 
@@ -17,13 +17,13 @@ const MapPage = () => {
   const [routePath, setRoutePath] = useState([]);
   const [travelMode, setTravelMode] = useState('walking');
   const [loading, setLoading] = useState(true);
-  const [activeObstacles, setActiveObstacles] = useState(1); // Mock data
+  const [activeObstacles, setActiveObstacles] = useState(1);
+  const [locationAccuracy, setLocationAccuracy] = useState('high');
 
   useEffect(() => {
     fetchLocations();
     getUserLocation();
     
-    // Check if we have a selected location from navigation
     if (location.state?.selectedLocation) {
       setSelectedBuilding(location.state.selectedLocation);
     }
@@ -50,11 +50,12 @@ const MapPage = () => {
             lat: position.coords.latitude,
             lng: position.coords.longitude
           });
+          setLocationAccuracy(position.coords.accuracy < 50 ? 'high' : 'low');
         },
         (error) => {
           console.error('Error getting location:', error);
-          // Use UMBC center as fallback
           setUserLocation({ lat: 39.2551, lng: -76.7130 });
+          setLocationAccuracy('low');
         }
       );
     }
@@ -77,11 +78,8 @@ const MapPage = () => {
 
       if (response.success) {
         setRouteInfo(response.route);
-        
-        // Decode polyline to get route path
         const decodedPath = decodePolyline(response.route.polyline);
         setRoutePath(decodedPath);
-        
         setSelectedBuilding(null);
       }
     } catch (error) {
@@ -124,13 +122,16 @@ const MapPage = () => {
     setTravelMode(mode);
     
     if (routeInfo && userLocation && selectedBuilding) {
-      // Recalculate route with new mode
       await handleGetDirections(selectedBuilding);
     }
   };
 
   const handleStartNavigation = () => {
-    alert('Navigation mode would start here. This would show turn-by-turn directions in real-time.');
+    alert('Turn-by-turn navigation would start here with real-time updates.');
+  };
+
+  const handleRecenterMap = () => {
+    getUserLocation();
   };
 
   if (loading) {
@@ -146,46 +147,79 @@ const MapPage = () => {
 
   return (
     <div className="relative h-[calc(100vh-4rem)]">
+      {/* Page Title - Overlay on map */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 bg-white px-6 py-3 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-bold text-gray-900">Interactive Campus Map</h1>
+        <p className="text-sm text-gray-600 text-center">Explore UMBC campus locations and get directions</p>
+      </div>
+
       {/* Map Controls - Top Right */}
-      <div className="absolute top-4 right-4 z-30 space-y-2">
+      <div className="absolute top-20 right-4 z-30 space-y-2">
         {/* Travel Mode Toggle */}
-        <div className="bg-white rounded-lg shadow-lg p-2 flex gap-2">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <button
             onClick={() => handleToggleTravelMode('walking')}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`w-full px-4 py-3 flex items-center justify-center gap-2 transition-colors border-b ${
               travelMode === 'walking'
-                ? 'bg-umbc-gold text-black'
-                : 'hover:bg-gray-100 text-gray-600'
+                ? 'bg-umbc-gold text-black font-semibold'
+                : 'hover:bg-gray-50 text-gray-700'
             }`}
-            title="Walking"
+            title="Walking Mode"
           >
             <Navigation size={20} />
+            <span className="font-medium">Walk</span>
           </button>
           <button
             onClick={() => handleToggleTravelMode('bicycling')}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`w-full px-4 py-3 flex items-center justify-center gap-2 transition-colors ${
               travelMode === 'bicycling'
-                ? 'bg-umbc-gold text-black'
-                : 'hover:bg-gray-100 text-gray-600'
+                ? 'bg-umbc-gold text-black font-semibold'
+                : 'hover:bg-gray-50 text-gray-700'
             }`}
-            title="Biking"
+            title="Biking Mode"
           >
             <Bike size={20} />
+            <span className="font-medium">Bike</span>
           </button>
         </div>
 
-        {/* Active Obstacles Alert */}
-        {activeObstacles > 0 && (
-          <div className="bg-red-500 text-white rounded-lg shadow-lg p-3 flex items-center gap-2">
-            <AlertCircle size={20} />
-            <span className="text-sm font-medium">
-              {activeObstacles} Active Obstacle{activeObstacles !== 1 ? 's' : ''}
-            </span>
-          </div>
-        )}
+        {/* My Location Button */}
+        <button
+          onClick={handleRecenterMap}
+          className="w-full bg-white rounded-lg shadow-lg p-3 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+          title="My Location"
+        >
+          <Crosshair size={20} className="text-umbc-blue" />
+          <span className="font-medium text-gray-700">My Location</span>
+        </button>
+
+        {/* Location Accuracy Indicator */}
+        <div className={`bg-white rounded-lg shadow-lg p-3 flex items-center gap-2 text-sm ${
+          locationAccuracy === 'high' ? 'text-green-600' : 'text-yellow-600'
+        }`}>
+          <MapPin size={16} />
+          <span className="font-medium">
+            {locationAccuracy === 'high' ? 'High' : 'Low'} Accuracy
+          </span>
+        </div>
       </div>
 
-      {/* Map */}
+      {/* Active Obstacles Alert - Top Right Below Controls */}
+      {activeObstacles > 0 && (
+        <div className="absolute top-80 right-4 z-30">
+          <div className="bg-red-500 text-white rounded-lg shadow-lg p-4 flex items-center gap-3 max-w-xs">
+            <AlertCircle size={24} className="flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-sm">
+                {activeObstacles} Active Obstacle{activeObstacles !== 1 ? 's' : ''}
+              </p>
+              <p className="text-xs text-red-100">Routes may be affected</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Google Map */}
       <MapContainer
         locations={locations}
         selectedLocation={selectedBuilding}
@@ -194,7 +228,7 @@ const MapPage = () => {
         route={routePath}
       />
 
-      {/* Building Details Panel */}
+      {/* Building Details Panel - Left Side */}
       {selectedBuilding && !routeInfo && (
         <BuildingDetailsPanel
           building={selectedBuilding}
@@ -203,7 +237,7 @@ const MapPage = () => {
         />
       )}
 
-      {/* Route Info Panel */}
+      {/* Route Info Panel - Left Side */}
       {routeInfo && (
         <RouteInfoPanel
           routeInfo={routeInfo}
