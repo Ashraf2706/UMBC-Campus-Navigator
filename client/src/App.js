@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/UI/Navbar';
 import HomePage from './components/Home/HomePage';
@@ -8,26 +8,45 @@ import AdminDashboard from './components/Admin/AdminDashboard';
 import ProtectedRoute from './components/Admin/ProtectedRoute';
 
 function App() {
+  const [userLocation, setUserLocation] = useState(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          setUserLocation({ lat: 39.2551, lng: -76.7130 });
+        }
+      );
+    } else {
+      setUserLocation({ lat: 39.2551, lng: -76.7130 });
+    }
+  }, []);
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Routes>
-          {/* Public Routes with Navbar */}
           <Route path="/" element={
             <>
-              <Navbar />
+              <Navbar userLocation={userLocation} />
               <HomePage />
             </>
           } />
           
           <Route path="/map" element={
             <>
-              <Navbar />
-              <MapPage />
+              <Navbar userLocation={userLocation} />
+              <MapPage userLocation={userLocation} />
             </>
           } />
 
-          {/* Admin Routes (No Navbar) */}
           <Route path="/admin/login" element={<AdminLogin />} />
           
           <Route path="/admin/*" element={
@@ -36,7 +55,6 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* Catch all - redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

@@ -1,33 +1,52 @@
-// src/components/Map/MapPage.jsx - Enhanced Version
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AlertCircle, Navigation, Bike, MapPin, Crosshair } from 'lucide-react';
 import MapContainer from './MapContainer';
 import BuildingDetailsPanel from '../Building/BuildingDetailsPanel';
 import RouteInfoPanel from './RouteInfoPanel';
+import ReportObstacleModal from '../Modals/ReportObstacleModal';
 import { getAllLocations } from '../../services/locationService';
 import { calculateRoute } from '../../services/routeService';
 
-const MapPage = () => {
+const MapPage = ({ userLocation: propUserLocation }) => {
   const location = useLocation();
   const [locations, setLocations] = useState([]);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(propUserLocation);
   const [routeInfo, setRouteInfo] = useState(null);
   const [routePath, setRoutePath] = useState([]);
   const [travelMode, setTravelMode] = useState('walking');
   const [loading, setLoading] = useState(true);
   const [activeObstacles, setActiveObstacles] = useState(1);
   const [locationAccuracy, setLocationAccuracy] = useState('high');
+  
+  // Obstacle reporting states
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [mapClickMode, setMapClickMode] = useState(false);
+  const [selectedObstacleCoords, setSelectedObstacleCoords] = useState(null);
 
   useEffect(() => {
     fetchLocations();
-    getUserLocation();
+    if (!propUserLocation) {
+      getUserLocation();
+    }
     
     if (location.state?.selectedLocation) {
       setSelectedBuilding(location.state.selectedLocation);
     }
-  }, [location.state]);
+    
+    // Check if we should enable map click mode from navigation
+    if (location.state?.enableObstacleMode) {
+      setMapClickMode(true);
+    }
+  }, [location.state, propUserLocation]);
+
+  // Update userLocation when prop changes
+  useEffect(() => {
+    if (propUserLocation) {
+      setUserLocation(propUserLocation);
+    }
+  }, [propUserLocation]);
 
   const fetchLocations = async () => {
     try {
@@ -134,6 +153,31 @@ const MapPage = () => {
     getUserLocation();
   };
 
+  const handleMapClick = (event) => {
+    if (mapClickMode && event.latLng) {
+      const coords = {
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng()
+      };
+      setSelectedObstacleCoords(coords);
+      setMapClickMode(false);
+      setIsReportModalOpen(true);
+    }
+  };
+
+  const handleEnableMapClickMode = () => {
+    setMapClickMode(true);
+    setSelectedBuilding(null);
+    setRouteInfo(null);
+    setIsReportModalOpen(false);
+  };
+
+  const handleMarkerClick = (location) => {
+    if (!mapClickMode) {
+      setSelectedBuilding(location);
+    }
+  };
+
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -147,24 +191,37 @@ const MapPage = () => {
 
   return (
     <div className="relative h-[calc(100vh-4rem)]">
-      {/* Page Title - Overlay on map */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 bg-white px-6 py-3 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold text-gray-900">Interactive Campus Map</h1>
-        <p className="text-sm text-gray-600 text-center">Explore UMBC campus locations and get directions</p>
-      </div>
+      {/* Map Click Mode Banner */}
+      {mapClickMode && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 bg-umbc-gold text-black px-6 py-3 rounded-lg shadow-lg">
+          <p className="font-semibold text-center">
+            📍 Click on the map where the obstacle is located
+          </p>
+          <button
+            onClick={() => setMapClickMode(false)}
+            className="text-sm underline hover:no-underline block text-center mt-1"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
 
-      {/* Map Controls - Top Right */}
+      {/* Page Title */}
+      {!mapClickMode && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 bg-white px-6 py-3 rounded-lg shadow-lg">
+          <h1 className="text-2xl font-bold text-gray-900">Interactive Campus Map</h1>
+          <p className="text-sm text-gray-600 text-center">Explore UMBC campus locations and get directions</p>
+        </div>
+      )}
+
+      {/* Map Controls */}
       <div className="absolute top-20 right-4 z-30 space-y-2">
-        {/* Travel Mode Toggle */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <button
             onClick={() => handleToggleTravelMode('walking')}
             className={`w-full px-4 py-3 flex items-center justify-center gap-2 transition-colors border-b ${
-              travelMode === 'walking'
-                ? 'bg-umbc-gold text-black font-semibold'
-                : 'hover:bg-gray-50 text-gray-700'
+              travelMode === 'walking' ? 'bg-umbc-gold text-black font-semibold' : 'hover:bg-gray-50 text-gray-700'
             }`}
-            title="Walking Mode"
           >
             <Navigation size={20} />
             <span className="font-medium">Walk</span>
@@ -172,64 +229,51 @@ const MapPage = () => {
           <button
             onClick={() => handleToggleTravelMode('bicycling')}
             className={`w-full px-4 py-3 flex items-center justify-center gap-2 transition-colors ${
-              travelMode === 'bicycling'
-                ? 'bg-umbc-gold text-black font-semibold'
-                : 'hover:bg-gray-50 text-gray-700'
+              travelMode === 'bicycling' ? 'bg-umbc-gold text-black font-semibold' : 'hover:bg-gray-50 text-gray-700'
             }`}
-            title="Biking Mode"
           >
             <Bike size={20} />
             <span className="font-medium">Bike</span>
           </button>
         </div>
 
-        {/* My Location Button */}
-        <button
-          onClick={handleRecenterMap}
-          className="w-full bg-white rounded-lg shadow-lg p-3 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-          title="My Location"
-        >
+        <button onClick={handleRecenterMap} className="w-full bg-white rounded-lg shadow-lg p-3 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
           <Crosshair size={20} className="text-umbc-blue" />
           <span className="font-medium text-gray-700">My Location</span>
         </button>
 
-        {/* Location Accuracy Indicator */}
         <div className={`bg-white rounded-lg shadow-lg p-3 flex items-center gap-2 text-sm ${
           locationAccuracy === 'high' ? 'text-green-600' : 'text-yellow-600'
         }`}>
           <MapPin size={16} />
-          <span className="font-medium">
-            {locationAccuracy === 'high' ? 'High' : 'Low'} Accuracy
-          </span>
+          <span className="font-medium">{locationAccuracy === 'high' ? 'High' : 'Low'} Accuracy</span>
         </div>
       </div>
 
-      {/* Active Obstacles Alert - Top Right Below Controls */}
+      {/* Active Obstacles */}
       {activeObstacles > 0 && (
         <div className="absolute top-80 right-4 z-30">
           <div className="bg-red-500 text-white rounded-lg shadow-lg p-4 flex items-center gap-3 max-w-xs">
             <AlertCircle size={24} className="flex-shrink-0" />
             <div>
-              <p className="font-semibold text-sm">
-                {activeObstacles} Active Obstacle{activeObstacles !== 1 ? 's' : ''}
-              </p>
+              <p className="font-semibold text-sm">{activeObstacles} Active Obstacle{activeObstacles !== 1 ? 's' : ''}</p>
               <p className="text-xs text-red-100">Routes may be affected</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Google Map */}
       <MapContainer
         locations={locations}
         selectedLocation={selectedBuilding}
-        onMarkerClick={setSelectedBuilding}
+        onMarkerClick={handleMarkerClick}
         userLocation={userLocation}
         route={routePath}
+        onMapClick={handleMapClick}
+        mapClickMode={mapClickMode}
       />
 
-      {/* Building Details Panel - Left Side */}
-      {selectedBuilding && !routeInfo && (
+      {selectedBuilding && !routeInfo && !mapClickMode && (
         <BuildingDetailsPanel
           building={selectedBuilding}
           onClose={() => setSelectedBuilding(null)}
@@ -237,8 +281,7 @@ const MapPage = () => {
         />
       )}
 
-      {/* Route Info Panel - Left Side */}
-      {routeInfo && (
+      {routeInfo && !mapClickMode && (
         <RouteInfoPanel
           routeInfo={routeInfo}
           onClose={() => {
@@ -250,6 +293,17 @@ const MapPage = () => {
           onToggleMode={handleToggleTravelMode}
         />
       )}
+
+      <ReportObstacleModal
+        isOpen={isReportModalOpen}
+        onClose={() => {
+          setIsReportModalOpen(false);
+          setSelectedObstacleCoords(null);
+        }}
+        selectedCoordinates={selectedObstacleCoords}
+        userLocation={userLocation}
+        onRequestMapClick={handleEnableMapClickMode}
+      />
     </div>
   );
 };

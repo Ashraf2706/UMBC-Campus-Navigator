@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Search, AlertTriangle, MessageSquare, GraduationCap } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Search, AlertTriangle, MessageSquare, GraduationCap, Shield } from 'lucide-react';
 import SearchModal from '../Modals/SearchModal';
 import ReportObstacleModal from '../Modals/ReportObstacleModal';
 import FeedbackModal from '../Modals/FeedbackModal';
-import { Shield } from 'lucide-react';
 
-const Navbar = () => {
+const Navbar = ({ userLocation }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  const handleRequestMapClick = () => {
+    setIsReportOpen(false);
+    
+    // Navigate to map with obstacle mode flag
+    if (location.pathname !== '/map') {
+      navigate('/map', { state: { enableObstacleMode: true } });
+    }
+  };
 
   return (
     <>
       <nav className="bg-white shadow-md sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 bg-umbc-gold rounded-lg flex items-center justify-center">
                 <GraduationCap size={24} className="text-black" />
@@ -28,7 +36,6 @@ const Navbar = () => {
               </div>
             </Link>
 
-            {/* Navigation Actions */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsSearchOpen(true)}
@@ -66,9 +73,13 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Modals */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <ReportObstacleModal isOpen={isReportOpen} onClose={() => setIsReportOpen(false)} />
+      <ReportObstacleModal 
+        isOpen={isReportOpen} 
+        onClose={() => setIsReportOpen(false)}
+        userLocation={userLocation}
+        onRequestMapClick={handleRequestMapClick}
+      />
       <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
     </>
   );

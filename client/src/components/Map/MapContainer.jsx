@@ -11,24 +11,27 @@ const center = {
   lng: -76.7130
 };
 
-const mapOptions = {
-  disableDefaultUI: false,
-  zoomControl: true,
-  streetViewControl: false,
-  mapTypeControl: true,
-  fullscreenControl: true,
-};
-
 const MapContainer = ({ 
   locations = [], 
   selectedLocation, 
   onMarkerClick,
   userLocation,
   route,
-  onMapClick 
+  onMapClick,
+  mapClickMode = false
 }) => {
   const [map, setMap] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const mapOptions = {
+    disableDefaultUI: false,
+    zoomControl: true,
+    streetViewControl: false,
+    mapTypeControl: true,
+    fullscreenControl: true,
+    draggableCursor: mapClickMode ? 'crosshair' : 'default',
+    clickableIcons: !mapClickMode,
+  };
 
   const onLoad = useCallback((map) => {
     setMap(map);
@@ -40,7 +43,6 @@ const MapContainer = ({
     setIsLoaded(false);
   }, []);
 
-  // Fit map bounds when route changes
   useEffect(() => {
     if (map && route && route.length > 0 && isLoaded) {
       const bounds = new window.google.maps.LatLngBounds();
@@ -51,7 +53,6 @@ const MapContainer = ({
     }
   }, [map, route, isLoaded]);
 
-  // Center on selected location
   useEffect(() => {
     if (map && selectedLocation && isLoaded) {
       map.panTo({
@@ -62,20 +63,18 @@ const MapContainer = ({
     }
   }, [map, selectedLocation, isLoaded]);
 
-  // This function now safely checks if google.maps is loaded
   const getBuildingIcon = (type) => {
-    // Check if google maps is loaded
     if (!window.google || !window.google.maps) {
-      return null; // Return null if not loaded yet
+      return null;
     }
 
     const colors = {
-      'Academic': '#3B82F6',      // Blue
-      'Dining': '#F59E0B',        // Orange
-      'Recreation': '#10B981',     // Green
-      'Residential': '#8B5CF6',    // Purple
-      'Administrative': '#6B7280', // Gray
-      'Parking': '#EF4444',        // Red
+      'Academic': '#3B82F6',
+      'Dining': '#F59E0B',
+      'Recreation': '#10B981',
+      'Residential': '#8B5CF6',
+      'Administrative': '#6B7280',
+      'Parking': '#EF4444',
     };
     
     return {
@@ -88,24 +87,23 @@ const MapContainer = ({
     };
   };
 
-  // Check if API key is present
+  const handleMapClick = (e) => {
+    if (onMapClick) {
+      onMapClick(e);
+    }
+  };
+
   if (!process.env.REACT_APP_GOOGLE_MAPS_API_KEY) {
     return (
       <div className="h-full flex items-center justify-center bg-gray-100">
         <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Google Maps API Key Missing
-          </h2>
-          <p className="text-gray-600 mb-4">
-            Please add your Google Maps API key to the .env file:
-          </p>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Google Maps API Key Missing</h2>
+          <p className="text-gray-600 mb-4">Please add your Google Maps API key to the .env file:</p>
           <code className="block bg-gray-100 p-3 rounded text-sm text-left">
             REACT_APP_GOOGLE_MAPS_API_KEY=your_key_here
           </code>
-          <p className="text-sm text-gray-500 mt-4">
-            Then restart the development server (npm start)
-          </p>
+          <p className="text-sm text-gray-500 mt-4">Then restart the development server (npm start)</p>
         </div>
       </div>
     );
@@ -130,9 +128,8 @@ const MapContainer = ({
         onLoad={onLoad}
         onUnmount={onUnmount}
         options={mapOptions}
-        onClick={onMapClick}
+        onClick={handleMapClick}
       >
-        {/* Only render markers if Google Maps is loaded */}
         {isLoaded && locations.map((location) => {
           const icon = getBuildingIcon(location.type);
           return icon ? (
@@ -143,13 +140,13 @@ const MapContainer = ({
                 lng: location.coordinates.lng
               }}
               icon={icon}
-              onClick={() => onMarkerClick(location)}
+              onClick={() => !mapClickMode && onMarkerClick(location)}
               title={location.name}
+              opacity={mapClickMode ? 0.5 : 1}
             />
           ) : null;
         })}
 
-        {/* User Location Marker */}
         {isLoaded && userLocation && (
           <Marker
             position={userLocation}
@@ -165,7 +162,6 @@ const MapContainer = ({
           />
         )}
 
-        {/* Route Polyline */}
         {isLoaded && route && route.length > 0 && (
           <Polyline
             path={route}
