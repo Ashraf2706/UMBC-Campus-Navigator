@@ -4,6 +4,7 @@ import { Search, AlertTriangle, MessageSquare, GraduationCap } from 'lucide-reac
 import SearchModal from '../Modals/SearchModal';
 import ReportObstacleModal from '../Modals/ReportObstacleModal';
 import FeedbackModal from '../Modals/FeedbackModal';
+import { Shield } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
@@ -52,6 +53,14 @@ const Navbar = () => {
                 <MessageSquare size={20} />
                 <span className="hidden md:inline">Feedback</span>
               </button>
+
+              <Link
+                to="/admin/login"
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <Shield size={20} />
+                <span className="hidden md:inline">Admin</span>
+              </Link>
             </div>
           </div>
         </div>
