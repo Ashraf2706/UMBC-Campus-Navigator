@@ -112,10 +112,6 @@ const locations = [
     coordinates: { lat: 39.25506, lng: -76.71082 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
     departments: [
-      "True Grits Dining Hall",
-      "Residential Life Office",
-      "Academic Success Center",
-      "Counseling Center",
       "Student Government Association",
       "Student Life Office",
       "Bookstore"
@@ -166,7 +162,7 @@ const locations = [
     name: "Administration Building",
     shortName: "ADMIN",
     type: "Administrative",
-    coordinates: { lat: 39.25527, lng: -76.71234 },
+    coordinates: { lat: 39.25306, lng: -76.71349 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
     departments: [
       "Office of the President",
@@ -186,7 +182,7 @@ const locations = [
     name: "Mathematics and Psychology Building",
     shortName: "MP",
     type: "Academic",
-    coordinates: { lat: 39.25472, lng: -76.71187 },
+    coordinates: { lat: 39.25411, lng: -76.71248 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
     departments: [
       "Mathematics and Statistics Department",

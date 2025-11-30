@@ -14,27 +14,27 @@ const HomePage = () => {
       icon: Navigation,
       title: 'Walking Routes',
       description: 'Get optimized walking directions between any two locations on campus with distance and time.',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
+      color: 'text-blue-600 dark:text-blue-400',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/30',
     },
     {
       icon: Bike,
       title: 'Biking Paths',
       description: 'Discover bike-friendly routes across campus with dedicated paths and accessibility information.',
-      color: 'text-green-600',
-      bgColor: 'bg-green-50',
+      color: 'text-green-600 dark:text-green-400',
+      bgColor: 'bg-green-50 dark:bg-green-900/30',
     },
     {
       icon: AlertTriangle,
       title: 'Obstacle Reports',
       description: 'Stay informed about construction, closures, and temporary obstacles affecting campus navigation.',
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50',
+      color: 'text-yellow-600 dark:text-yellow-400',
+      bgColor: 'bg-yellow-50 dark:bg-yellow-900/30',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-200">
       {/* Hero Section with Background Image */}
       <div 
         className="relative h-[600px] bg-cover bg-center bg-no-repeat"
@@ -53,11 +53,11 @@ const HomePage = () => {
           {/* Search Bar */}
           <div 
             onClick={() => setIsSearchOpen(true)}
-            className="w-full max-w-3xl bg-white rounded-full shadow-2xl p-4 cursor-pointer hover:shadow-3xl transition-shadow"
+            className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-full shadow-2xl p-4 cursor-pointer hover:shadow-3xl transition-all"
           >
             <div className="flex items-center gap-3 px-4">
-              <Search className="text-gray-400" size={24} />
-              <span className="text-gray-500 text-lg">
+              <Search className="text-gray-400 dark:text-gray-500" size={24} />
+              <span className="text-gray-500 dark:text-gray-400 text-lg">
                 Search for buildings, departments, or amenities...
               </span>
             </div>
@@ -71,16 +71,16 @@ const HomePage = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow cursor-pointer"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 hover:shadow-xl transition-all cursor-pointer border border-transparent dark:border-gray-700"
               onClick={() => navigate('/map')}
             >
               <div className={`${feature.bgColor} ${feature.color} w-16 h-16 rounded-full flex items-center justify-center mb-4`}>
                 <feature.icon size={32} />
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
                 {feature.title}
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -89,21 +89,6 @@ const HomePage = () => {
       </div>
 
       {/* Popular Locations Section */}
-      {/* <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Popular Locations</h2>
-          <p className="text-gray-600 mb-8">Quick access to frequently visited campus destinations</p>
-          
-          <div className="text-center">
-            <button
-              onClick={() => navigate('/map')}
-              className="bg-umbc-gold hover:bg-umbc-dark-gold text-black font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all"
-            >
-              View All Locations on Map
-            </button>
-          </div>
-        </div>
-      </div> */}
       <PopularLocations/>
 
       {/* Footer */}

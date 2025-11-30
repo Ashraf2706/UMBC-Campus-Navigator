@@ -1,63 +1,138 @@
-import React from 'react';
-import { GraduationCap, Mail, Phone, MapPin as MapPinIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { MapPin, Mail, AlertTriangle, MessageSquare, Linkedin, Instagram } from 'lucide-react';
+import ReportObstacleModal from '../Modals/ReportObstacleModal';
+import FeedbackModal from '../Modals/FeedbackModal';
 
 const Footer = () => {
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+
   return (
-    <footer className="bg-umbc-blue text-white mt-auto">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* About */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <GraduationCap size={32} />
-              <div>
-                <h3 className="text-xl font-bold">UMBC</h3>
-                <p className="text-sm text-blue-200">Campus Navigator</p>
+    <>
+      <footer className="bg-umbc-gold dark:bg-umbc-gold transition-colors duration-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            {/* About Section */}
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="bg-black p-2 rounded-lg">
+                  <MapPin className="w-6 h-6 text-umbc-gold" />
+                </div>
+                <h3 className="text-lg font-bold text-black">UMBC Navigator</h3>
               </div>
+              <p className="text-sm text-black">
+                Navigate UMBC campus with ease. Find buildings, get directions, and explore campus facilities.
+              </p>
             </div>
-            <p className="text-blue-200 text-sm">
-              Navigate the UMBC campus with confidence. Find buildings, get directions, 
-              and stay updated on campus obstacles.
-            </p>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-lg font-bold text-black mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/" className="text-sm text-black hover:text-gray-800 transition-colors">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/login" className="text-sm text-black hover:text-gray-800 transition-colors">
+                    Admin Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/map" className="text-sm text-black hover:text-gray-800 transition-colors">
+                    Interactive Map
+                  </Link>
+                </li>
+                <li>
+                  <a href="https://umbc.edu" target="_blank" rel="noopener noreferrer" className="text-sm text-black hover:text-gray-800 transition-colors">
+                    UMBC Website
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Help & Support - WITH REPORT OBSTACLE AND FEEDBACK */}
+            <div>
+              <h3 className="text-lg font-bold text-black mb-4">Help & Support</h3>
+              <ul className="space-y-2">
+                <li>
+                  <button
+                    onClick={() => setIsReportModalOpen(true)}
+                    className="flex items-center space-x-2 text-sm text-black hover:text-gray-800 transition-colors"
+                  >
+                    <AlertTriangle className="w-4 h-4" />
+                    <span>Report Obstacle</span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setIsFeedbackModalOpen(true)}
+                    className="flex items-center space-x-2 text-sm text-black hover:text-gray-800 transition-colors"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Submit Feedback</span>
+                  </button>
+                </li>
+                <li>
+                  <a href="mailto:support@umbc.edu" className="flex items-center space-x-2 text-sm text-black hover:text-gray-800 transition-colors">
+                    <Mail className="w-4 h-4" />
+                    <span>Contact Support</span>
+                  </a>
+                </li>  
+              </ul>
+            </div>
+
+            {/* Connect */}
+            <div>
+              <h3 className="text-lg font-bold text-black mb-4">Connect</h3>
+              <div className="flex space-x-4">
+                <a
+                  href="https://www.instagram.com/umbclife/?hl=en"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-black p-2 rounded-lg text-umbc-gold hover:bg-gray-800 transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/school/university-of-maryland-baltimore-county/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-black p-2 rounded-lg text-umbc-gold hover:bg-gray-800 transition-colors"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
+              <p className="text-sm text-black mt-4">
+                Follow UMBC for updates and news
+              </p>
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-blue-200 text-sm">
-              <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
-              <li><a href="/map" className="hover:text-white transition-colors">Campus Map</a></li>
-              <li><a href="https://www.umbc.edu" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">UMBC Website</a></li>
-              <li><a href="/admin/login" className="hover:text-white transition-colors">Admin Login</a></li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-3 text-blue-200 text-sm">
-              <li className="flex items-start gap-2">
-                <MapPinIcon size={16} className="mt-0.5 flex-shrink-0" />
-                <span>1000 Hilltop Circle<br />Baltimore, MD 21250</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone size={16} />
-                <span>(410) 455-1000</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail size={16} />
-                <span>support@umbc.edu</span>
-              </li>
-            </ul>
+          {/* Bottom Bar */}
+          <div className="mt-8 pt-8 border-t border-black/20">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <p className="text-sm text-black">
+                © {new Date().getFullYear()} UMBC Campus Navigator. All rights reserved.
+              </p>
+            </div>
           </div>
         </div>
+      </footer>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-blue-700 mt-8 pt-8 text-center text-blue-200 text-sm">
-          <p>&copy; {new Date().getFullYear()} UMBC Campus Navigator. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+      {/* Modals */}
+      <ReportObstacleModal 
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+      />
+      <FeedbackModal 
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+      />
+    </>
   );
 };
 

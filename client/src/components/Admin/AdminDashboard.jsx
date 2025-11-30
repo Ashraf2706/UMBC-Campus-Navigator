@@ -49,7 +49,7 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
-      <aside className={`bg-umbc-blue text-white w-64 fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ${
+      <aside className={`bg-umbc-black text-white w-64 fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}>
         <div className="flex flex-col h-full">

@@ -7,7 +7,8 @@ const RouteInfoPanel = ({
   onClose, 
   onStartNavigation,
   travelMode,
-  onToggleMode 
+  onToggleMode,
+  isMobile 
 }) => {
   if (!routeInfo) return null;
 
@@ -21,6 +22,112 @@ const RouteInfoPanel = ({
     return `${miles} mi`;
   };
 
+  // Mobile bottom sheet layout
+  if (isMobile) {
+    return (
+      <div className="absolute bottom-0 left-0 right-0 z-30 bg-white rounded-t-2xl shadow-2xl pb-safe">
+        {/* Drag Handle */}
+        <div className="flex justify-center pt-3 pb-2">
+          <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+        </div>
+
+        {/* Header */}
+        <div className="px-4 pb-4 border-b border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-gray-900">Route Details</h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X size={20} className="text-gray-600" />
+            </button>
+          </div>
+
+          {/* Duration and Distance - Compact */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="flex items-center gap-2 bg-blue-50 p-3 rounded-lg">
+              <Clock size={18} className="text-blue-600 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-lg font-bold text-gray-900 truncate">
+                  {formatDuration(routeInfo.duration)}
+                </p>
+                <p className="text-xs text-gray-500">Duration</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 bg-green-50 p-3 rounded-lg">
+              <TrendingUp size={18} className="text-green-600 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-lg font-bold text-gray-900 truncate">
+                  {formatDistance(routeInfo.distance)}
+                </p>
+                <p className="text-xs text-gray-500">Distance</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Travel Mode Toggle - Compact */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => onToggleMode('walking')}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg font-medium transition-colors text-sm ${
+                travelMode === 'walking'
+                  ? 'bg-umbc-gold text-black'
+                  : 'bg-gray-100 text-gray-600'
+              }`}
+            >
+              <Footprints size={16} />
+              Walk
+            </button>
+            <button
+              onClick={() => onToggleMode('bicycling')}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg font-medium transition-colors text-sm ${
+                travelMode === 'bicycling'
+                  ? 'bg-umbc-gold text-black'
+                  : 'bg-gray-100 text-gray-600'
+              }`}
+            >
+              <Bike size={16} />
+              Bike
+            </button>
+          </div>
+        </div>
+
+        {/* Steps - Scrollable */}
+        <div className="max-h-48 overflow-y-auto px-4 py-4">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3">Directions</h3>
+          <div className="space-y-3">
+            {routeInfo.steps && routeInfo.steps.map((step, index) => (
+              <div key={index} className="flex gap-2">
+                <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium text-blue-600">
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-900 mb-0.5">{step.instruction}</p>
+                  <p className="text-xs text-gray-500">{step.distance}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="px-4 py-4 border-t border-gray-200">
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={onStartNavigation}
+            className="w-full"
+            icon={Navigation}
+          >
+            Start Navigation
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop sidebar layout
   return (
     <div className="absolute top-4 left-4 w-96 bg-white rounded-lg shadow-2xl overflow-hidden z-30">
       {/* Header */}
