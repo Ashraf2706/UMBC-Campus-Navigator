@@ -42,8 +42,8 @@ const FeedbackModal = ({ isOpen, onClose }) => {
       <Modal isOpen={isOpen} onClose={onClose} title="Thank You!" size="sm">
         <div className="text-center py-8">
           <div className="text-6xl mb-4">✅</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Feedback Submitted!</h3>
-          <p className="text-gray-600">Thank you for helping us improve UMBC Campus Navigator.</p>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Feedback Submitted!</h3>
+          <p className="text-gray-600 dark:text-gray-400">Thank you for helping us improve UMBC Campus Navigator.</p>
         </div>
       </Modal>
     );
@@ -51,14 +51,14 @@ const FeedbackModal = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Share Your Feedback" size="md">
-      <p className="text-gray-600 mb-6">
+      <p className="text-gray-600 dark:text-gray-400 mb-6">
         Help us improve the UMBC Campus Navigator with your suggestions and comments.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Rating */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             How would you rate your experience?
           </label>
           <div className="flex gap-2">
@@ -76,7 +76,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
                   className={`${
                     star <= (hoveredRating || rating)
                       ? 'fill-umbc-gold text-umbc-gold'
-                      : 'text-gray-300'
+                      : 'text-gray-300 dark:text-gray-600'
                   } transition-colors`}
                 />
               </button>
@@ -86,7 +86,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
 
         {/* Feedback Text */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Your Feedback
           </label>
           <textarea
@@ -95,7 +95,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
             onChange={(e) => setFeedback(e.target.value)}
             required
             rows={6}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-umbc-gold focus:border-transparent resize-none"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-umbc-gold focus:border-transparent resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           />
         </div>
 
@@ -124,4 +124,4 @@ const FeedbackModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default FeedbackModal; 
+export default FeedbackModal;

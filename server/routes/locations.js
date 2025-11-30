@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 // @route   GET /api/locations/search
-// @desc    Search locations by name or short form
+// @desc    Search locations by name, short form, or department/office
 // @access  Public
 router.get('/search', async (req, res) => {
   try {
@@ -25,11 +25,12 @@ router.get('/search', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Query parameter required' });
     }
 
-    // Search by name or shortName (case-insensitive)
+    // Search by name, shortName, OR departments (case-insensitive)
     const locations = await Location.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
-        { shortName: { $regex: query, $options: 'i' } }
+        { shortName: { $regex: query, $options: 'i' } },
+        { departments: { $regex: query, $options: 'i' } }
       ]
     });
 

@@ -14,10 +14,16 @@ const locations = [
     type: "Academic",
     coordinates: { lat: 39.25447, lng: -76.71391 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["Computer Science", "Mechanical Engineering"],
+    departments: [
+      "Computer Science and Electrical Engineering Department",
+      "Mechanical Engineering Department",
+      "Chemical, Biochemical, and Environmental Engineering",
+      "Center for Advanced Sensor Technology",
+      "Engineering Dean's Office"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 20, // need to change
+      bikeRackCapacity: 20,
     }
   },
   {
@@ -27,10 +33,15 @@ const locations = [
     type: "Academic",
     coordinates: { lat: 39.25389, lng: -76.71428 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["Information Systems", "Computer Engineering"],
+    departments: [
+      "Information Systems Department",
+      "Computer Engineering",
+      "Cybersecurity Lab",
+      "UMBC Training Centers"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 15, // change
+      bikeRackCapacity: 15,
     }
   },
   {
@@ -40,10 +51,17 @@ const locations = [
     type: "Dining",
     coordinates: { lat: 39.25441, lng: -76.7133 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["Student Life", "Dining Services"],
+    departments: [
+      "Student Life Office",
+      "Dining Services",
+      "Student Organizations",
+      "Campus Card Office",
+      "Mailing and Shipping Services",
+      "International Student and Scholar Services"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 30, // change
+      bikeRackCapacity: 30,
     }
   },
   {
@@ -53,10 +71,18 @@ const locations = [
     type: "Academic",
     coordinates: { lat: 39.25638, lng: -76.71152 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["Library Services"],
+    departments: [
+      "Library Services",
+      "Special Collections",
+      "Research Help Desk",
+      "Writing Center",
+      "Media Services",
+      "University Archives",
+      "Tutoring Center"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 25, // change
+      bikeRackCapacity: 25,
     }
   },
   {
@@ -66,10 +92,16 @@ const locations = [
     type: "Recreation",
     coordinates: { lat: 39.25300, lng: -76.71257 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["Athletics", "Recreation"],
+    departments: [
+      "Athletics Department",
+      "Recreation and Wellness",
+      "Intramural Sports",
+      "Fitness Center",
+      "Orthopedic and Physical Therapy Center"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 40, //change
+      bikeRackCapacity: 10,
     }
   },
   {
@@ -79,10 +111,14 @@ const locations = [
     type: "Dining",
     coordinates: { lat: 39.25506, lng: -76.71082 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["Student Life", "Academic", "Dining"],
+    departments: [
+      "Student Government Association",
+      "Student Life Office",
+      "Bookstore"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 40, //change
+      bikeRackCapacity: 40,
     }
   },
   {
@@ -92,10 +128,16 @@ const locations = [
     type: "Academic",
     coordinates: { lat: 39.25396, lng: -76.71101 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["College of Natural and Mathematical Scienes (CNMS)"],
+    departments: [
+      "Biological Sciences Department",
+      "Chemistry and Biochemistry",
+      "Physics Department",
+      "Psychology Department",
+      "Imaging Research Center"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 40, //change
+      bikeRackCapacity: 10,
     }
   },
   {
@@ -105,10 +147,53 @@ const locations = [
     type: "Residential",
     coordinates: { lat: 39.25817, lng: -76.71198 },
     address: "1000 Hilltop Circle, Baltimore, MD 21250",
-    departments: ["Apartment Housing"],
+    departments: [
+      "Apartment Housing Office",
+      "Community Events",
+      "Resident Services"
+    ],
     bikeFeatures: {
       bikeRackAvailable: true,
-      bikeRackCapacity: 40, //change
+      bikeRackCapacity: 8,
+    }
+  },
+  {
+    locationID: "ADMIN_101",
+    name: "Administration Building",
+    shortName: "ADMIN",
+    type: "Administrative",
+    coordinates: { lat: 39.25306, lng: -76.71349 },
+    address: "1000 Hilltop Circle, Baltimore, MD 21250",
+    departments: [
+      "Office of the President",
+      "Graduate School Office",
+      "Student Business Services Office",
+      "Registrar's Office",
+      "Admissions Office",
+      "Human Resources"
+    ],
+    bikeFeatures: {
+      bikeRackAvailable: false,
+      bikeRackCapacity: 0,
+    }
+  },
+  {
+    locationID: "MATH_101",
+    name: "Mathematics and Psychology Building",
+    shortName: "MP",
+    type: "Academic",
+    coordinates: { lat: 39.25411, lng: -76.71248 },
+    address: "1000 Hilltop Circle, Baltimore, MD 21250",
+    departments: [
+      "Mathematics and Statistics Department",
+      "Psychology Department",
+      "Math Tutoring Center",
+      "Statistics Consulting Center",
+      "Career Center"
+    ],
+    bikeFeatures: {
+      bikeRackAvailable: false,
+      bikeRackCapacity: 0,
     }
   }
 ];
@@ -123,7 +208,8 @@ const seedDatabase = async () => {
 
     // Insert locations
     await Location.insertMany(locations);
-    console.log('Locations seeded successfully');
+    console.log('✅ Locations seeded successfully');
+    console.log(`📍 Added ${locations.length} locations with department data`);
 
     // Create admin user
     await User.create({
@@ -131,13 +217,20 @@ const seedDatabase = async () => {
       email: 'admin@umbc.edu',
       password: 'umbc123'
     });
-    console.log('Admin user created:');
-    console.log('  Email: admin@umbc.edu');
-    console.log('  Password: umbc123');
-    console.log('  (Change password after first login!)');
+    console.log('\n✅ Admin user created:');
+    console.log('  📧 Email: admin@umbc.edu');
+    console.log('  🔑 Password: umbc123');
+    console.log('  ⚠️  Change password after first login!');
+    
+    console.log('\n💡 You can now search by:');
+    console.log('  - Building names (e.g., "Engineering Building")');
+    console.log('  - Abbreviations (e.g., "ENG", "ITE")');
+    console.log('  - Departments (e.g., "Computer Science", "Registrar")');
+    console.log('  - Offices (e.g., "Financial Aid", "Admissions")');
+    
     process.exit();
   } catch (error) {
-    console.error('Error seeding database:', error);
+    console.error('❌ Error seeding database:', error);
     process.exit(1);
   }
 };
