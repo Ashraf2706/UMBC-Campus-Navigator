@@ -1,23 +1,41 @@
 const mongoose = require('mongoose');
 
-const FeedbackSchema = new mongoose.Schema({
-  issueType: {
+const feedbackSchema = new mongoose.Schema({
+  name: {
     type: String,
-    enum: ['Wrong Location', 'Missing Building', 'Route Error', 'Accessibility Issue', 'Other'],
-    required: true
+    required: false,
+    default: 'Anonymous'
   },
-  locationID: String,
-  description: {
+  email: {
     type: String,
-    required: true
+    required: false,
+    default: 'not-provided@example.com'
+  },
+  rating: {
+    type: Number,
+    required: false,
+    default: 5,
+    min: 1,
+    max: 5
+  },
+  message: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  submittedAt: {
+    type: Date,
+    default: Date.now
   },
   status: {
     type: String,
-    enum: ['New', 'Reviewed', 'Resolved'],
-    default: 'New'
+    enum: ['new', 'reviewed', 'resolved'],
+    default: 'new'
   }
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('Feedback', FeedbackSchema);
+const Feedback = mongoose.model('Feedback', feedbackSchema);
+
+module.exports = Feedback;

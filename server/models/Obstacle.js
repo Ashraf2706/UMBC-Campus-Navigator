@@ -1,33 +1,52 @@
 const mongoose = require('mongoose');
 
-const ObstacleSchema = new mongoose.Schema({
+const obstacleSchema = new mongoose.Schema({
   obstacleID: {
     type: String,
     required: true,
     unique: true
   },
-  type: {
+  title: {
     type: String,
-    enum: ['Construction', 'Closed Path', 'Event'],
     required: true
   },
-  description: String,
-  affectedArea: {
-    type: {
-      type: String,
-      enum: ['Point', 'LineString', 'Polygon'],
-      default: 'Point'
-    },
-    coordinates: []
+  location: {
+    type: String,
+    required: true
   },
-  startDate: Date,
-  endDate: Date,
+  description: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    enum: ['Construction', 'Closed Path', 'Event', 'Maintenance', 'Weather', 'Other'],
+    required: true
+  },
+  severity: {
+    type: String,
+    enum: ['Low', 'Medium', 'High'],
+    required: true
+  },
+  startDate: {
+    type: Date,
+    default: Date.now
+  },
+  endDate: {
+    type: Date
+  },
   isActive: {
     type: Boolean,
     default: true
+  },
+  submittedAt: {
+    type: Date,
+    default: Date.now
   }
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('Obstacle', ObstacleSchema);
+const Obstacle = mongoose.model('Obstacle', obstacleSchema);
+
+module.exports = Obstacle;

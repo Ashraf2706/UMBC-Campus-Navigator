@@ -217,17 +217,6 @@ const seedDatabase = async () => {
       email: 'admin@umbc.edu',
       password: 'umbc123'
     });
-    console.log('\n✅ Admin user created:');
-    console.log('  📧 Email: admin@umbc.edu');
-    console.log('  🔑 Password: umbc123');
-    console.log('  ⚠️  Change password after first login!');
-    
-    console.log('\n💡 You can now search by:');
-    console.log('  - Building names (e.g., "Engineering Building")');
-    console.log('  - Abbreviations (e.g., "ENG", "ITE")');
-    console.log('  - Departments (e.g., "Computer Science", "Registrar")');
-    console.log('  - Offices (e.g., "Financial Aid", "Admissions")');
-    
     process.exit();
   } catch (error) {
     console.error('❌ Error seeding database:', error);
