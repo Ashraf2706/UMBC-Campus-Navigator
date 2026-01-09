@@ -2,6 +2,9 @@
 
 A comprehensive campus navigation system designed to help students, faculty, and visitors navigate the University of Maryland, Baltimore County (UMBC) campus efficiently. This full-stack web application provides intelligent route planning, location management, obstacle tracking, and user feedback collection.
 
+<img width="1903" height="907" alt="image" src="https://github.com/user-attachments/assets/1a555de0-64de-478d-8cc6-e70b4acdb496" />
+<img width="1915" height="903" alt="image" src="https://github.com/user-attachments/assets/5aef45a7-efcf-4d8d-b8f9-f5bf480de18a" />
+
 ## 👥 Team Members
 
 - **Victor Olalemi**
