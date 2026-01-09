@@ -17,7 +17,7 @@ const LocationSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['Academic', 'Dining', 'Recreation', 'Residential', 'Administrative', 'Parking', 'Other']
+    enum: ['Academic', 'Dining', 'Recreation', 'Residential', 'Administrative', 'Parking', 'Athletic', 'Health', 'Other']
   },
   coordinates: {
     lat: {

@@ -6,6 +6,6 @@ export const submitFeedback = async (feedbackData) => {
 };
 
 export const submitObstacleReport = async (obstacleData) => {
-  const response = await api.post('/admin/obstacles', obstacleData);
+  const response = await api.post('/feedback/obstacle', obstacleData);
   return response.data;
 };
