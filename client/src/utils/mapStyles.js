@@ -84,7 +84,7 @@ export const darkMapStyle = [
   },
   {
     "elementType": "labels.text.stroke",
-    "stylers": [{ "color": "#212121" }]
+    "stylers": [{ "color": "#757575" }, { "visibility": "off" }]
   },
   {
     "featureType": "administrative",
@@ -94,22 +94,22 @@ export const darkMapStyle = [
   {
     "featureType": "poi",
     "elementType": "labels.text.fill",
-    "stylers": [{ "color": "#757575" }]
+    "stylers": [{ "color": "#757575" }, { "visibility": "off" }]
   },
   {
     "featureType": "poi.park",
     "elementType": "geometry",
-    "stylers": [{ "color": "#181818" }]
+    "stylers": [{ "color": "#181818" }, { "visibility": "off" }]
   },
   {
     "featureType": "poi.school",
     "elementType": "geometry",
-    "stylers": [{ "color": "#003580" }]
+    "stylers": [{ "color": "#003580" }, { "visibility": "off" }]
   },
   {
     "featureType": "road",
     "elementType": "geometry.fill",
-    "stylers": [{ "color": "#2c2c2c" }]
+    "stylers": [{ "color": "#fdb515" }]
   },
   {
     "featureType": "road",
@@ -119,17 +119,17 @@ export const darkMapStyle = [
   {
     "featureType": "road.arterial",
     "elementType": "geometry",
-    "stylers": [{ "color": "#373737" }]
+    "stylers": [{ "color": "#fdb515" }]
   },
   {
     "featureType": "road.highway",
     "elementType": "geometry",
-    "stylers": [{ "color": "#3c3c3c" }]
+    "stylers": [{ "color": "#fdb515" }]
   },
   {
     "featureType": "water",
     "elementType": "geometry",
-    "stylers": [{ "color": "#000000" }]
+    "stylers": [{ "color": "#3d3d3d" }]
   },
   {
     "featureType": "water",

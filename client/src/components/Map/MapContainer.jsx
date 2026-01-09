@@ -91,6 +91,8 @@ const MapContainer = ({
       'Residential': '#8B5CF6',
       'Administrative': '#6B7280',
       'Parking': '#EF4444',
+      'Athletic':'#FF6D1F',
+      'Health': '060771',
     };
     
     return {
@@ -176,7 +178,7 @@ const MapContainer = ({
           <Polyline
             path={route}
             options={{
-              strokeColor: isDarkMode ? '#60A5FA' : '#4285F4', // Lighter blue in dark mode
+              strokeColor: isDarkMode ? '#da2128' : '#da2128', // Lighter blue in dark mode
               strokeOpacity: 0.8,
               strokeWeight: 5,
             }}
